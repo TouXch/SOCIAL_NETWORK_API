@@ -33,3 +33,10 @@ The database file have dummy data preoloaded
 ### Migrations
 
 I didn't cover database migrations
+
+###Unit Test
+*Pre-requisites:
+  - Bogus---------------------------------------(v34.0.2)
+  - Microsoft.EntityFrameworkCore.InMemory------(v7.0.2)
+* Unit Test can be run with the project SOCIAL_NETWORK_TEST
+* Is recomended run each test separately for avoid trouble with duplicated dummy data filled with BOGUS library.
