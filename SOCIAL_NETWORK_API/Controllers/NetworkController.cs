@@ -5,7 +5,7 @@ using SOCIAL_NETWORK_API.Models;
 
 namespace SOCIAL_NETWORK_API.Controllers
 {
-    [EnableCors("ReglasCors")]
+    //[EnableCors("ReglasCors")]
     [Route("/[controller]")]
     [ApiController]
     public class networkController : ControllerBase
@@ -23,9 +23,14 @@ namespace SOCIAL_NETWORK_API.Controllers
         {
             try
             {
+                var listofIDs = _dbcontext.Users.Select(u => u.UserId).ToList();
                 Network relation = _dbcontext.Networks.Where(r => r.User1Id == userID).Where(r => r.User2Id == friendID).Where(r => r.RelationType == "friendship").FirstOrDefault();
                 Network relationFollow = _dbcontext.Networks.Where(r => r.User1Id == userID).Where(r => r.User2Id == friendID).Where(r => r.RelationType == "follow").FirstOrDefault();
-                if (relation == null && relationFollow == null)
+                if (!listofIDs.Contains(userID) || !listofIDs.Contains(friendID))
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { message = "One of the users in the relationship not exists" });
+                }
+                else if (relation == null && relationFollow == null)
                 {
                     Network relationship = new Network();
                     relationship.User1Id = userID;
@@ -55,9 +60,14 @@ namespace SOCIAL_NETWORK_API.Controllers
         {
             try
             {
+                var listofIDs = _dbcontext.Users.Select(u => u.UserId).ToList();
                 Network relation = _dbcontext.Networks.Where(r => r.User1Id == userID).Where(r => r.User2Id == followerID).Where(r => r.RelationType == "friendship").FirstOrDefault();
                 Network relationFollow = _dbcontext.Networks.Where(r => r.User1Id == userID).Where(r => r.User2Id == followerID).Where(r => r.RelationType == "follow").FirstOrDefault();
-                if (relation == null && relationFollow == null)
+                if (!listofIDs.Contains(userID) || !listofIDs.Contains(followerID))
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { message = "One of the users in the relationship not exists" });
+                }
+                else if (relation == null && relationFollow == null)
                 {
                     Network relationship = new Network();
                     relationship.User1Id = userID;

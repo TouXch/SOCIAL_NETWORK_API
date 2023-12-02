@@ -11,5 +11,5 @@ public partial class Network
 
     public int User2Id { get; set; }
 
-    public string RelationType { get; set; } = null!;
+    public string RelationType { get; set; } = "friendship";
 }

@@ -6,7 +6,7 @@ using SOCIAL_NETWORK_API.Models;
 
 namespace SOCIAL_NETWORK_API.Controllers
 {
-    [EnableCors("ReglasCors")]
+    //[EnableCors("ReglasCors")]
     [Route("/")]
     [ApiController]
     public class UserController : ControllerBase

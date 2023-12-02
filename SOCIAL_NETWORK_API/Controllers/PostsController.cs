@@ -5,7 +5,7 @@ using SOCIAL_NETWORK_API.Models;
 
 namespace SOCIAL_NETWORK_API.Controllers
 {
-    [EnableCors("ReglasCors")]
+    //[EnableCors("ReglasCors")]
     [Route("/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
@@ -23,9 +23,22 @@ namespace SOCIAL_NETWORK_API.Controllers
         {
             try
             {
-                _dbcontext.Add(post);
-                _dbcontext.SaveChanges();
-                return StatusCode(StatusCodes.Status200OK, new { post.PostId });
+                var listofIDs = _dbcontext.Users.Select(u => u.UserId).ToList();
+                var postPublished = _dbcontext.Posts.Where(p => p.UserId == post.UserId).Where(p => p.Text == post.Text).FirstOrDefault();
+                if (!listofIDs.Contains(post.UserId))
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { message = "The user "+post.UserId+" do not exists" });
+                }
+                else if (postPublished != null)
+                {
+                    return StatusCode(StatusCodes.Status208AlreadyReported, new { message = "The post of user " + post.UserId + " and with text "+post.Text+" already exists" });
+                }
+                else
+                {
+                    _dbcontext.Add(post);
+                    _dbcontext.SaveChanges();
+                    return StatusCode(StatusCodes.Status200OK, new { post.PostId });
+                }                
             }
             catch (Exception ex)
             {
@@ -37,6 +50,7 @@ namespace SOCIAL_NETWORK_API.Controllers
         [Route("/walls/{userID:int}")]
         public IActionResult getWall(int userID)
         {
+            var listOfIDS = _dbcontext.Users.Select(u => u.UserId).ToList();
             List<Post> userWall = new List<Post>();
             List<Post> postWall = new List<Post>();
             List<Network> relations = new List<Network>();
@@ -44,6 +58,10 @@ namespace SOCIAL_NETWORK_API.Controllers
             Post postAux = new Post();
             try
             {
+                if (!listOfIDS.Contains(userID))
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { message = "User " + userID + " not exists" });
+                }
                 relations = _dbcontext.Networks.ToList().Where(r => r.User1Id == userID).ToList();
                 foreach (var r in relations)
                 {

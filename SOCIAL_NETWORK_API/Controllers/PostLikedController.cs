@@ -5,7 +5,7 @@ using SOCIAL_NETWORK_API.Models;
 
 namespace SOCIAL_NETWORK_API.Controllers
 {
-    [EnableCors("ReglasCors")]
+    //[EnableCors("ReglasCors")]
     [Route("/[controller]")]
     [ApiController]
     public class PostLikedController : ControllerBase
@@ -23,9 +23,15 @@ namespace SOCIAL_NETWORK_API.Controllers
         {
             try
             {
+                var userList = _dbcontext.Users.Select(u => u.UserId).ToList();
+                var postList = _dbcontext.Posts.Select(p => p.PostId).ToList();
                 PostLiked postL = new PostLiked();
                 PostLiked pl = _dbcontext.PostLikeds.Where(p => p.PostLiked1 == postID).Where(p => p.UserLike == userID).Where(p => p.LikeStatus == true).FirstOrDefault();
-                if (pl != null)
+                if (!userList.Contains(userID) || !postList.Contains(postID))
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { message = "User " + userID + " or post " + postID + " not exists" });
+                }
+                else if (pl != null)
                 {
                     return StatusCode(StatusCodes.Status208AlreadyReported, new { message = "Post are ready liked." });
                 }
@@ -57,10 +63,17 @@ namespace SOCIAL_NETWORK_API.Controllers
         {
             try
             {
+                var userList = _dbcontext.Users.Select(u => u.UserId).ToList();
+                var postList = _dbcontext.Posts.Select(p => p.PostId).ToList();
                 PostLiked pl = _dbcontext.PostLikeds.Where(p => p.PostLiked1 == postID).Where(p => p.UserLike == userID).FirstOrDefault();
                 if (pl == null)
                 {
                     return StatusCode(StatusCodes.Status404NotFound, new { message = "User " + userID + " not liked post " + postID });
+                }
+                else if (!userList.Contains(userID) || !postList.Contains(postID))
+                {
+                    return StatusCode(StatusCodes.Status404NotFound, new { message = "User " + userID + " or post " + postID + " not exists" });
+
                 }
                 else
                 {                    
