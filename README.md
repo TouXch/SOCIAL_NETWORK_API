@@ -12,39 +12,23 @@
 
 * Start by clone the repo:
 
-git clone https://github.com/alebychac/drone.git
+git clone https://github.com/TouXch/SOCIAL_NETWORK_API.git
 
-* Install [python3](https://www.python.org/downloads/).:
-
-* *  select the latest version from: https://www.python.org/downloads/
-
-* open the project folder
-
-* install the project requirements using:
-
-pip install -r requirements.txt
+* Install mysql (v10.4.11)
+* Import the database file (social_network.sql) attached in the solution folder
+* If you need install the nuget packages requeriments using PM console
 
 * start the server:
 
-uvicorn app.main:app --reload
+Build the project, the project automatically run in localhost
 
 * Now you can open your browser and interact with these URLs:
 
-Automatic interactive documentation with Swagger UI (from the OpenAPI backend): http://localhost/docs
-
-Alternative automatic documentation with ReDoc (from the OpenAPI backend): http://localhost/redoc
+Automatic interactive documentation with Swagger UI (provided by Visual Studio 2022)
 
 * Fill the database
 
-if you need to fill the database with some elements you can use the script:
-
-app/fill_db.py
-
-### Project local tests
-
-To test the project run:
-
-pytest
+The database file have dummy data preoloaded
 
 ### Migrations
 
